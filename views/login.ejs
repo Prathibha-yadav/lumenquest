@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Lumen Quest</title>
+ 
+</head>
+
+<body>
+  <div>
+    <div>
+      <h2 class="heading">Lumen Quest</h2>
+    </div>
+  <div class="container">
+    <h3>Login</h3>
+    <form action="/login" method="POST">
+      <input type="text" name="_csrf" value="<%= csrfToken %>" hidden>
+      <div>
+        <label for="email">Email:</label>
+        
+        <input type="email" name="email" placeholder="Enter your email" required>
+      </div>
+      <div>
+        <label for="password">Password:</label>
+        <input type="password" name="password" placeholder="Enter your password" required>
+      </div>
+      <ul>
+        <% if(messages && messages.error && messages.error.length > 0)  { %>
+          <% for(var i=0; i<messages.error.length; i++) { %>
+            <li class="error-message"><%= messages.error[i] %></li>
+          <% } %>
+        <% } %>
+      </ul>
+      <div>
+        <p>Not a user? <a href="/signup" class="signup-link">Sign up</a></p>
+      </div>
+      <div>
+        <button type="submit" class="submit-button">Log In</button>
+      </div>
+    </form>
+  </div>
+</div>
+</body>
+</html>

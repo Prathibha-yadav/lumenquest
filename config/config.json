@@ -1,0 +1,20 @@
+{
+  "development": {
+    "username": "postgres",
+    "password": "prathibha",
+    "database": "lumenquest",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "postgres",
+    "password": "prathibha",
+    "database": "lumenquest-test",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "production": {
+    "use_env_variable": "DATABASE_URL",
+    "dialect": "postgres"
+  }
+}

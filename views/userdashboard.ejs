@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Dashboard</title>
+</head>
+<body>
+  <%- include("header.ejs") %> 
+  
+  <main>
+    <section>
+      <p>Here you can explore services, manage your account, or view your usage details.</p>
+    </section>
+
+    <section>
+      <h3>Available Actions</h3>
+      <ul>
+        <li><a href="/user/explore-services">Explore Services</a></li>
+        <li><a href="/user/account">Manage Account</a></li>
+        <li><a href="/user/usage">View Usage</a></li>
+      </ul>
+    </section>
+  </main>
+  <%- include("footer.ejs") %> 
+
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lumen Quest</title>
+  
+</head>
+
+<body>
+  <div class="container">
+    <h3>Sign-up</h3>
+    <form action="/signup" method="POST">
+      <input type="text" name="_csrf" value="<%= csrfToken %>" hidden>
+      <div>
+        <label for="firstname">First Name:</label>
+        <input type="text" name="firstname" placeholder="First Name" required>
+      </div>
+      <div>
+        <label for="lastname">Last Name:</label>
+        <input type="text" name="lastname" placeholder="Last Name" required>
+      </div>
+      <div>
+        <label for="role">Sign Up As:</label>
+        <select name="role">
+          <option value="admin">Admin</option>
+          <option value="customer">Customer</option>
+        </select>
+      </div>
+      <div>
+        <label for="email">Email:</label>
+        <input type="email" name="email" placeholder="Email" required>
+      </div>
+      <div>
+        <label for="password">Password:</label>
+        <input type="password" name="password" placeholder="Password" required>
+      </div>
+      <% if(failure){%>
+        <p>Email Already registered <a href="/login" class="login-link">Sign-in</a></p>
+      <% } %>
+      <ul>
+        <% if(messages && messages.error && messages.error.length > 0)  { %>
+          <% for(var i=0; i<messages.error.length; i++) { %>
+            <li class="error-message"><%= messages.error[i] %></li>
+          <% } %>
+        <% } %>
+      </ul>
+      <div>
+        <p>Already a user? <a href="/login" class="login-link">Login</a></p>
+      </div>
+      <div>
+        <button type="submit" class="submit-button">Sign-up</button>
+      </div>
+    </form>
+  </div>
+</body>
+</html>

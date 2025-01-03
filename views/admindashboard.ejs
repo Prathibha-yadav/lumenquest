@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+</head>
+<body>
+  <%- include("header.ejs") %> 
+  <main>
+    <section>
+      <h1 >Welcome <%= getUser.firstname %>!</h1>
+      <p>This is your dashboard. Manage users, services, or settings from here.</p>
+    </section>
+
+    <section>
+      <h3>Quick Actions</h3>
+      <ul>
+        <li><a href="/admin/manage-users">Manage Users</a></li>
+        <li><a href="/admin/manage-services">Manage Services</a></li>
+        <li><a href="/admin/settings">Settings</a></li>
+      </ul>
+    </section>
+  </main>
+  <%- include("footer.ejs") %> 
+</body>
+</html>
