@@ -4,33 +4,44 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>User Dashboard</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-gray-50 text-gray-900 font-sans">
+
+  <!-- Header Section (included) -->
   <%- include("header.ejs") %> 
   
-  <main>
-    <section>
-      <p>Here you can explore services, manage your account, or view your usage details.</p>
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto p-6">
+
+    <!-- Intro Section -->
+    <section class="mb-8">
+      <p class="text-lg text-gray-700">Here you can explore services, manage your account, or view your usage details.</p>
     </section>
 
-    <section>
-      <h3>Available Products</h3>
-      
+    <!-- Products Section -->
+    <section class="mt-8">
+      <h3 class="text-2xl font-medium text-gray-800 mb-4">Available Products</h3>
+
       <% if (products.length > 0) { %>
-        <ul>
+        <ul class="space-y-6">
           <% products.forEach(product => { %>
-            <li>
-              <h4><%= product.ProductName %></h4>
-              <p><%= product.Description %></p>
-              <p><%= product.ProductCategoryName %></p>
+            <li class="bg-white shadow-md rounded-lg p-6">
+              <h4 class="text-xl font-semibold text-gray-800"><%= product.ProductName %></h4>
+              <p class="mt-2 text-gray-600"><%= product.Description %></p>
+              <p class="mt-2 text-sm text-indigo-600"><%= product.ProductCategoryName %></p>
             </li>
           <% }) %>
         </ul>
       <% } else { %>
-        <p>No products available.</p>
+        <p class="text-gray-500">No products available.</p>
       <% } %>
     </section>
+
   </main>
+
+  <!-- Footer Section (included) -->
   <%- include("footer.ejs") %> 
 
 </body>

@@ -4,36 +4,52 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Dashboard</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-gray-50 text-gray-900 font-sans">
+
+  <!-- Header Section -->
   <%- include("header.ejs") %> 
-  <main>
-    <section>
-      <h1>Welcome <%= getUser.firstname %>!</h1>
-      <p>This is your dashboard. Manage users, services, or settings from here.</p>
+
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto p-6">
+
+    <!-- Welcome Section -->
+    <section class="mb-8">
+      <h1 class="text-3xl font-semibold text-indigo-600">Welcome, <%= getUser.firstname %>!</h1>
+      <p class="mt-2 text-lg text-gray-700">This is your dashboard. Manage users, services, or settings from here.</p>
     </section>
 
-    <section>
-      <h3>Available Products</h3>
-      <p>
-        <a href="/products/add">Create a new product</a>
+    <!-- Products Section -->
+    <section class="mt-8">
+      <h3 class="text-2xl font-medium text-gray-800 mb-4">Available Products</h3>
+      <p class="text-sm text-gray-600 mb-6">
+        <a href="/products/add" class="text-indigo-600 hover:text-indigo-800 font-semibold">Create a new product</a>
       </p>
 
       <% if (products.length > 0) { %>
-        <ul>
+        <ul class="space-y-6">
           <% products.forEach(product => { %>
-            <li>
-              <h4><%= product.ProductName %></h4>
-              <p><%= product.Description %></p>
-              <p><%= product.ProductCategoryName %></p>
+            <li class="bg-white shadow-md rounded-lg p-6">
+              <!-- Make each product clickable to view its details -->
+              <a href="/products/view/<%= product.id %>" class="block">
+                <h4 class="text-xl font-semibold text-gray-800"><%= product.ProductName %></h4>
+                <p class="mt-2 text-gray-600"><%= product.Description %></p>
+                <p class="mt-2 text-sm text-indigo-600"><%= product.ProductCategoryName %></p>
+              </a>
             </li>
           <% }) %>
         </ul>
       <% } else { %>
-        <p>No products available.</p>
+        <p class="text-gray-500">No products available.</p>
       <% } %>
     </section>
+
   </main>
+
+  <!-- Footer Section -->
   <%- include("footer.ejs") %> 
+
 </body>
 </html>

@@ -10,7 +10,8 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       ProductName: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false,  // Ensure product name is not null
       },
       Description: {
         type: Sequelize.STRING
@@ -19,7 +20,8 @@ module.exports = {
         type: Sequelize.STRING
       },
       ProductCategoryName: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false,  // Ensure product category is not null
       },
       ModelNumber: {
         type: Sequelize.STRING
@@ -28,7 +30,8 @@ module.exports = {
         type: Sequelize.STRING
       },
       StockLevel: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: false,  // Ensure stock level is not null
       },
       ReorderPoint: {
         type: Sequelize.INTEGER

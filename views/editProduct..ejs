@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Product</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-900 font-sans">
+
+    <div class="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg mt-8">
+        <h1 class="text-3xl font-semibold text-indigo-600 mb-6">Edit Product</h1>
+
+        <!-- Display Flash Messages -->
+        <% if (locals.success) { %>
+            <div class="text-green-600 bg-green-100 p-4 mb-6 rounded-md">
+                <%= locals.success %>
+            </div>
+        <% } %>
+        <% if (locals.error) { %>
+            <div class="text-red-600 bg-red-100 p-4 mb-6 rounded-md">
+                <%= locals.error %>
+            </div>
+        <% } %>
+
+        <!-- Edit Product Form -->
+        <form action="/products/edit/<%= product.id %>" method="POST">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+            <div class="mb-4">
+                <label for="ProductName" class="block text-gray-700 font-medium">Product Name:</label>
+                <input type="text" id="ProductName" name="ProductName" value="<%= product.ProductName %>" required class="w-full mt-2 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500">
+            </div>
+
+            <div class="mb-4">
+                <label for="ProductCategoryName" class="block text-gray-700 font-medium">Product Category:</label>
+                <input type="text" id="ProductCategoryName" name="ProductCategoryName" value="<%= product.ProductCategoryName %>" required class="w-full mt-2 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500">
+            </div>
+
+            <div class="mb-4">
+                <label for="StockLevel" class="block text-gray-700 font-medium">Stock Level:</label>
+                <input type="number" id="StockLevel" name="StockLevel" value="<%= product.StockLevel %>" required class="w-full mt-2 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500">
+            </div>
+
+            <button type="submit" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500">Update Product</button>
+        </form>
+    </div>
+
+</body>
+</html>

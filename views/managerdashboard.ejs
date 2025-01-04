@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manager Dashboard</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 text-gray-900 font-sans flex items-center justify-center min-h-screen">
+  <div class="bg-white shadow-xl rounded-lg p-8 max-w-lg w-full">
+    <h2 class="text-3xl font-semibold text-indigo-600">Welcome, <%= getUser.firstname %>!</h2>
+    <p class="text-gray-500 mt-2">Manage your products here.</p>
+
+    <!-- Products List -->
+    <h3 class="text-2xl font-medium text-center mb-4">Products</h3>
+    <ul>
+      <% products.forEach(product => { %>
+        <li class="border-b border-gray-300 py-2">
+          <p class="font-semibold text-indigo-600"><%= product.ProductName %></p>
+          <p class="text-gray-600">Category: <%= product.ProductCategoryName %></p>
+          <p class="text-gray-600">Stock Level: <%= product.StockLevel %></p>
+        </li>
+      <% }); %>
+    </ul>
+  </div>
+</body>
+</html>

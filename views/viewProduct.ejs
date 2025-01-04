@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>View Product</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans">
+
+  <!-- Header Section -->
+  <%- include("header.ejs") %> 
+
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto p-6">
+
+    <!-- Product Details Section -->
+    <section class="bg-white shadow-md rounded-lg p-6">
+      <h1 class="text-3xl font-semibold text-indigo-600 mb-6">Product Details</h1>
+
+      <!-- Display Flash Messages -->
+      <% if (locals.success) { %>
+        <div class="text-green-600 bg-green-100 p-4 mb-6 rounded-md">
+          <%= locals.success %>
+        </div>
+      <% } %>
+      <% if (locals.error) { %>
+        <div class="text-red-600 bg-red-100 p-4 mb-6 rounded-md">
+          <%= locals.error %>
+        </div>
+      <% } %>
+
+      <div class="mb-4">
+        <strong class="text-lg">Product Name:</strong>
+        <p><%= product.ProductName %></p>
+      </div>
+
+      <div class="mb-4">
+        <strong class="text-lg">Description:</strong>
+        <p><%= product.Description || 'No description available.' %></p>
+      </div>
+
+      <div class="mb-4">
+        <strong class="text-lg">Category:</strong>
+        <p><%= product.ProductCategoryName %></p>
+      </div>
+
+      <div class="mb-4">
+        <strong class="text-lg">Stock Level:</strong>
+        <p><%= product.StockLevel %></p>
+      </div>
+
+      <div class="mb-4">
+        <strong class="text-lg">Supplier:</strong>
+        <p><%= product.SupplierName %></p>
+      </div>
+
+      <div class="mb-4">
+        <strong class="text-lg">Order Status:</strong>
+        <p><%= product.OrderStatus %></p>
+      </div>
+
+      <div class="mb-4">
+        <a href="/products/edit/<%= product.id %>" class="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:ring-2 focus:ring-blue-500">Edit Product</a>
+        <form action="/products/delete/<%= product.id %>" method="POST" class="inline">
+          <button type="submit" class="bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 focus:ring-2 focus:ring-red-500">Delete Product</button>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer Section -->
+  <%- include("footer.ejs") %> 
+
+</body>
+</html>

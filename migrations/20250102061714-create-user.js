@@ -18,12 +18,17 @@ module.exports = {
       },
       email: {
         type: Sequelize.STRING,
+        unique: true,  // Email should be unique
+        allowNull: false,  // Email cannot be null
       },
       role: {
-        type: Sequelize.STRING,
+        type: Sequelize.ENUM('admin', 'manager', 'staff', 'customer'), // Added 'customer' role
+        defaultValue: 'staff',  // Default role is staff
+        allowNull: false,  // Role cannot be null
       },
       password: {
         type: Sequelize.STRING,
+        allowNull: false,  // Password cannot be null
       },
       createdAt: {
         allowNull: false,
@@ -35,7 +40,9 @@ module.exports = {
       },
     });
   },
+
   async down(queryInterface, Sequelize) {
+    // Drop the Users table and the ENUM type used for the role column
     await queryInterface.dropTable("Users");
   },
 };

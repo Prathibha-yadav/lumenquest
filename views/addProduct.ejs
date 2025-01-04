@@ -1,79 +1,106 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Product</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <h1>Add Product</h1>
+<body class="bg-gray-100 text-gray-900 font-sans">
 
-    <!-- Display Flash Messages -->
-    <% if (locals.success) { %>
-        <div style="color: green;">
-            <%= locals.success %>
-        </div>
-    <% } %>
-    <% if (locals.error) { %>
-        <div style="color: red;">
-            <%= locals.error %>
-        </div>
-    <% } %>
-    <form method="POST" action="/products/add">
-        <input type="text" name="_csrf" value="<%= csrfToken %>" hidden>
-        <input type="text" name="name" required placeholder="Product Name">
-        <input type="text" name="category" required placeholder="Category">
-        <input type="number" name="stockLevel" required placeholder="Stock Level">
-        <input type="number" name="reorderPoint" required placeholder="Reorder Point">
-        <input type="text" name="supplier" required placeholder="Supplier Name">
-        <input type="text" name="supplierContact" placeholder="Supplier Contact">
-        <button type="submit">Save Product</button>
-      </form>
-      
-    <!-- Add Product Form -->
-    <form action="/products/add" method="POST">
-        <input type="text" name="_csrf" value="<%= csrfToken %>" hidden>
-        <label for="ProductName">Product Name:</label>
-        <input type="text" id="ProductName" name="ProductName" required><br><br>
+    <div class="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg mt-8">
+        <h1 class="text-3xl font-semibold text-indigo-600 mb-6">Add Product</h1>
 
-        <label for="Description">Description:</label>
-        <textarea id="Description" name="Description"></textarea><br><br>
+        <!-- Display Flash Messages -->
+        <% if (locals.success) { %>
+            <div class="text-green-600 bg-green-100 p-4 mb-6 rounded-md">
+                <%= locals.success %>
+            </div>
+        <% } %>
+        <% if (locals.error) { %>
+            <div class="text-red-600 bg-red-100 p-4 mb-6 rounded-md">
+                <%= locals.error %>
+            </div>
+        <% } %>
 
-        <label for="ProductImage">Product Image (URL):</label>
-        <input type="text" id="ProductImage" name="ProductImage"><br><br>
+        <!-- Add Product Form -->
+        <form action="/products/add" method="POST">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
-        <label for="ProductCategoryName">Product Category:</label>
-        <input type="text" id="ProductCategoryName" name="ProductCategoryName" required><br><br>
+            <div class="mb-4">
+                <label for="ProductName" class="block text-gray-700 font-medium">Product Name:</label>
+                <input type="text" id="ProductName" name="ProductName" required class="w-full mt-2 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500">
+            </div>
 
-        <label for="ModelNumber">Model Number:</label>
-        <input type="text" id="ModelNumber" name="ModelNumber"><br><br>
+            <div class="mb-4">
+                <label for="Description" class="block text-gray-700 font-medium">Description:</label>
+                <textarea id="Description" name="Description" class="w-full mt-2 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500"></textarea>
+            </div>
 
-        <label for="SerialNumber">Serial Number:</label>
-        <input type="text" id="SerialNumber" name="SerialNumber"><br><br>
+            <div class="mb-4">
+                <label for="ProductImage" class="block text-gray-700 font-medium">Product Image (URL):</label>
+                <input type="text" id="ProductImage" name="ProductImage" class="w-full mt-2 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500">
+            </div>
 
-        <label for="StockLevel">Stock Level:</label>
-        <input type="number" id="StockLevel" name="StockLevel" required><br><br>
+            <div class="mb-4">
+                <label for="ProductCategoryName" class="block text-gray-700 font-medium">Product Category Name:</label>
+                <input type="text" id="ProductCategoryName" name="ProductCategoryName" required class="w-full mt-2 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500">
+            </div>
 
-        <label for="ReorderPoint">Reorder Point:</label>
-        <input type="number" id="ReorderPoint" name="ReorderPoint" required><br><br>
+            <div class="mb-4">
+                <label for="ModelNumber" class="block text-gray-700 font-medium">Model Number:</label>
+                <input type="text" id="ModelNumber" name="ModelNumber" class="w-full mt-2 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500">
+            </div>
 
-        <label for="SupplierName">Supplier Name:</label>
-        <input type="text" id="SupplierName" name="SupplierName"><br><br>
+            <div class="mb-4">
+                <label for="SerialNumber" class="block text-gray-700 font-medium">Serial Number:</label>
+                <input type="text" id="SerialNumber" name="SerialNumber" class="w-full mt-2 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500">
+            </div>
 
-        <label for="SupplierMail">Supplier Email:</label>
-        <input type="email" id="SupplierMail" name="SupplierMail"><br><br>
+            <div class="mb-4">
+                <label for="StockLevel" class="block text-gray-700 font-medium">Stock Level:</label>
+                <input type="number" id="StockLevel" name="StockLevel" required class="w-full mt-2 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500">
+            </div>
 
-        <label for="SupplierContact">Supplier Contact:</label>
-        <input type="text" id="SupplierContact" name="SupplierContact"><br><br>
+            <div class="mb-4">
+                <label for="ReorderPoint" class="block text-gray-700 font-medium">Reorder Point:</label>
+                <input type="number" id="ReorderPoint" name="ReorderPoint" class="w-full mt-2 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500">
+            </div>
 
-        <label for="OrderDate">Order Date:</label>
-        <input type="date" id="OrderDate" name="OrderDate"><br><br>
+            <div class="mb-4">
+                <label for="SupplierName" class="block text-gray-700 font-medium">Supplier Name:</label>
+                <input type="text" id="SupplierName" name="SupplierName" class="w-full mt-2 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500">
+            </div>
 
-        <label for="Quantity">Quantity:</label>
-        <input type="number" id="Quantity" name="Quantity"><br><br>
+            <div class="mb-4">
+                <label for="SupplierMail" class="block text-gray-700 font-medium">Supplier Email:</label>
+                <input type="email" id="SupplierMail" name="SupplierMail" class="w-full mt-2 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500">
+            </div>
 
-        <label for="OrderStatus">Order Status:</label>
-        <input type="text" id="OrderStatus" name="OrderStatus"><br><br>
+            <div class="mb-4">
+                <label for="SupplierContact" class="block text-gray-700 font-medium">Supplier Contact:</label>
+                <input type="text" id="SupplierContact" name="SupplierContact" class="w-full mt-2 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500">
+            </div>
 
-        <button type="submit">Add Product</button>
-    </form>
+            <div class="mb-4">
+                <label for="OrderDate" class="block text-gray-700 font-medium">Order Date:</label>
+                <input type="date" id="OrderDate" name="OrderDate" class="w-full mt-2 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500">
+            </div>
+
+            <div class="mb-4">
+                <label for="Quantity" class="block text-gray-700 font-medium">Quantity:</label>
+                <input type="number" id="Quantity" name="Quantity" class="w-full mt-2 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500">
+            </div>
+
+            <div class="mb-4">
+                <label for="OrderStatus" class="block text-gray-700 font-medium">Order Status:</label>
+                <input type="text" id="OrderStatus" name="OrderStatus" class="w-full mt-2 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500">
+            </div>
+
+            <button type="submit" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500">Add Product</button>
+        </form>
+    </div>
+
 </body>
 </html>

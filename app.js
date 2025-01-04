@@ -1,10 +1,8 @@
 const express = require('express');
 const path = require('path');
-const { User, Inventory } = require('./models'); // Import the User model
+const { User, Inventory } = require('./models');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
-const saltRounds = 10;
-
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const session = require('express-session');
@@ -13,6 +11,7 @@ const csrf = require('tiny-csrf');
 const cookieParser = require('cookie-parser');
 
 const app = express();
+const saltRounds = 10;
 
 // Middleware setup
 app.use(express.urlencoded({ extended: false }));
@@ -36,14 +35,14 @@ app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Flash message setup
+// Flash message and CSRF token setup
 app.use((req, res, next) => {
   res.locals.messages = req.flash();
   res.locals.csrfToken = req.csrfToken();
   next();
 });
 
-// Passport local strategy for login
+// Passport configuration
 passport.use(
   new LocalStrategy(
     { usernameField: 'email', passwordField: 'password' },
@@ -76,22 +75,30 @@ passport.deserializeUser((id, done) => {
 });
 
 // Routes
-app.get('/', (request, response) => {
-  if (request.isAuthenticated()) {
-    return request.user.role === 'admin'
-      ? response.redirect('/admin/dashboard')
-      : response.redirect('/user/dashboard');
+app.get('/', (req, res) => {
+  if (req.isAuthenticated()) {
+    return req.user.role === 'admin'
+      ? res.redirect('/admin/dashboard')
+      : req.user.role === 'manager'
+      ? res.redirect('/manager/dashboard')
+      : req.user.role === 'customer'
+      ? res.redirect('/user/dashboard')
+      : res.redirect('/staff/dashboard');
   }
-  response.render('home');
+  res.render('home');
 });
 
-app.get('/login', (request, response) => {
-  if (request.isAuthenticated()) {
-    return request.user.role === 'admin'
-      ? response.redirect('/admin/dashboard')
-      : response.redirect('/user/dashboard');
+app.get('/login', (req, res) => {
+  if (req.isAuthenticated()) {
+    return req.user.role === 'admin'
+      ? res.redirect('/admin/dashboard')
+      : req.user.role === 'manager'
+      ? res.redirect('/manager/dashboard')
+      : req.user.role === 'customer'
+      ? res.redirect('/user/dashboard')
+      : res.redirect('/staff/dashboard');
   }
-  response.render('login', { messages: request.flash() });
+  res.render('login', { messages: req.flash() });
 });
 
 app.post(
@@ -100,65 +107,68 @@ app.post(
     failureRedirect: '/login',
     failureFlash: true,
   }),
-  (request, response) => {
-    console.log("user role is...",request.user.role)
-    return request.user.role === 'admin'
-      ? response.redirect('/admin/dashboard')
-      : response.redirect('/user/dashboard');
+  (req, res) => {
+    return req.user.role === 'admin'
+      ? res.redirect('/admin/dashboard')
+      : req.user.role === 'manager'
+      ? res.redirect('/manager/dashboard')
+      : req.user.role === 'customer'
+      ? res.redirect('/user/dashboard')
+      : res.redirect('/staff/dashboard');
   }
 );
 
-app.get('/signup', (request, response) => {
-  response.render('signup', {
+app.get('/signup', (req, res) => {
+  res.render('signup', {
     failure: false,
-    csrfToken: request.csrfToken()
-  })
-})
+    csrfToken: req.csrfToken(),
+  });
+});
 
-app.post('/signup', async (request, response) => {
-  const { firstname, lastname, email, password, role } = request.body;
+app.post('/signup', async (req, res) => {
+  const { firstname, lastname, email, password, role } = req.body;
 
   try {
-    // Validate input
     if (!firstname || !lastname || !email || !password || !role) {
-      request.flash('error', 'All fields are required');
-      return response.redirect('/signup');
+      req.flash('error', 'All fields are required');
+      return res.redirect('/signup');
     }
 
-    // Check if user already exists
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
-      request.flash('error', 'Email already registered');
-      return response.redirect('/signup');
+      req.flash('error', 'Email already registered');
+      return res.redirect('/signup');
     }
 
-    // Hash the password
     const hashedPwd = await bcrypt.hash(password, saltRounds);
-
-    // Create user
-    const newUser = await User.addUser({
-      firstname: request.body.firstname,
-      lastname: request.body.lastname,
-      email: request.body.email,
+    const newUser = await User.create({
+      firstname,
+      lastname,
+      email,
       password: hashedPwd,
-      role: request.body.role
-    })
-    console.log(newUser)
-    // Log the user in
-    request.login(newUser, (err) => {
+      role,
+    });
+
+    req.login(newUser, (err) => {
       if (err) {
-        console.error(err);
-        request.flash('error', 'Something went wrong. Please try again.');
-        return response.redirect('/signup');
+        req.flash('error', 'Something went wrong. Please try again.');
+        return res.redirect('/signup');
       }
-      return role === 'admin'
-        ? response.redirect('/admin/dashboard')
-        : response.redirect('/user/dashboard');
+
+      if (newUser.role === 'admin') {
+        return res.redirect('/admin/dashboard');
+      } else if (newUser.role === 'manager') {
+        return res.redirect('/manager/dashboard');
+      } else if (newUser.role === 'customer') {
+        return res.redirect('/user/dashboard');
+      } else {
+        return res.redirect('/staff/dashboard');
+      }
     });
   } catch (error) {
     console.error(error);
-    request.flash('error', 'Internal server error');
-    response.redirect('/signup');
+    req.flash('error', 'Internal server error');
+    res.redirect('/signup');
   }
 });
 
@@ -168,12 +178,10 @@ app.get('/admin/dashboard', async (request, response) => {
   }
 
   try {
-    // Retrieve all products from the database
     const products = await Inventory.findAll();
-
     response.render('admindashboard', { 
       getUser: request.user,
-      products: products // Pass products to the view
+      products: products,
     });
   } catch (error) {
     console.error(error);
@@ -181,6 +189,22 @@ app.get('/admin/dashboard', async (request, response) => {
   }
 });
 
+app.get('/manager/dashboard', async (request, response) => {
+  if (!request.isAuthenticated() || request.user.role !== 'manager') {
+    return response.status(403).send('Access denied');
+  }
+
+  try {
+    const products = await Inventory.findAll();
+    response.render('managerdashboard', { 
+      getUser: request.user,
+      products: products,
+    });
+  } catch (error) {
+    console.error(error);
+    response.status(500).send('Internal server error');
+  }
+});
 
 app.get('/user/dashboard', async (request, response) => {
   if (!request.isAuthenticated() || request.user.role !== 'customer') {
@@ -188,12 +212,10 @@ app.get('/user/dashboard', async (request, response) => {
   }
 
   try {
-    // Retrieve all products for the user dashboard
     const products = await Inventory.findAll();
-
     response.render('userdashboard', { 
       getUser: request.user,
-      products: products // Pass products to the view
+      products: products,
     });
   } catch (error) {
     console.error(error);
@@ -202,10 +224,14 @@ app.get('/user/dashboard', async (request, response) => {
 });
 
 
-app.get('/products/add', (req, res) => {
-  res.render('addProduct'); 
-});
 
+// Add Product Route
+app.get('/products/add', (req, res) => {
+  if (!req.isAuthenticated() || req.user.role !== 'admin') {
+    return res.status(403).send('Access denied');
+  }
+  res.render('addProduct');
+});
 
 app.post('/products/add', async (req, res) => {
   const {
@@ -239,11 +265,17 @@ app.post('/products/add', async (req, res) => {
     // Set a flash message
     req.flash('success', 'Product added successfully!');
 
-    // Redirect to admin dashboard with product details
+    // Redirect based on the user's role
     if (req.user.role === 'admin') {
       return res.redirect('/admin/dashboard');
+    } else if (req.user.role === 'manager') {
+      return res.redirect('/manager/dashboard'); // Redirect managers to their dashboard
+    } else if (req.user.role === 'customer') {
+      req.flash('error', 'Customers are not authorized to add products.');
+      return res.redirect('/user/dashboard'); // Redirect customers with an error message
     } else {
-      return res.redirect('/user/dashboard');
+      req.flash('error', 'Unauthorized action.');
+      return res.redirect('/staff/dashboard'); // Default for staff or other roles
     }
 
   } catch (error) {
@@ -254,7 +286,75 @@ app.post('/products/add', async (req, res) => {
 });
 
 
+// View Product Route
+app.get('/products/view/:id', async (req, res) => {
+  try {
+    const product = await Inventory.findByPk(req.params.id);
+    if (!product) {
+      req.flash('error', 'Product not found.');
+      return res.redirect('/admin/dashboard');
+    }
+    res.render('viewProduct', { product });
+  } catch (error) {
+    console.error(error);
+    req.flash('error', 'Failed to retrieve product details.');
+    res.redirect('/admin/dashboard');
+  }
+});
 
+
+// Edit Product Route
+app.get('/products/edit/:id', async (req, res) => {
+  if (!req.isAuthenticated() || req.user.role !== 'admin') {
+    return res.status(403).send('Access denied');
+  }
+  try {
+    const product = await Inventory.findByPk(req.params.id);
+    if (!product) {
+      req.flash('error', 'Product not found.');
+      return res.redirect('/admin/dashboard');
+    }
+    res.render('editProduct', { product });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal server error');
+  }
+});
+
+app.post('/products/edit/:id', async (req, res) => {
+  const { ProductName, ProductCategoryName, StockLevel } = req.body;
+
+  if (!ProductName || !ProductCategoryName || !StockLevel) {
+    req.flash('error', 'Mandatory fields are missing.');
+    return res.redirect(`/products/edit/${req.params.id}`);
+  }
+
+  try {
+    await Inventory.update(req.body, { where: { id: req.params.id } });
+    req.flash('success', 'Product updated successfully!');
+    res.redirect('/admin/dashboard');
+  } catch (error) {
+    console.error(error);
+    req.flash('error', 'Failed to update product.');
+    res.redirect(`/products/edit/${req.params.id}`);
+  }
+});
+
+// Delete Product Route
+app.post('/products/delete/:id', async (req, res) => {
+  if (!req.isAuthenticated() || req.user.role !== 'admin') {
+    return res.status(403).send('Access denied');
+  }
+  try {
+    await Inventory.destroy({ where: { id: req.params.id } });
+    req.flash('success', 'Product deleted successfully!');
+    res.redirect('/admin/dashboard');
+  } catch (error) {
+    console.error(error);
+    req.flash('error', 'Failed to delete product.');
+    res.redirect('/admin/dashboard');
+  }
+});
 
 app.get('/logout', (request, response) => {
   request.logout((err) => {
