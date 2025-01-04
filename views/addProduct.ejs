@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Product</title>
+</head>
+<body>
+    <h1>Add Product</h1>
+
+    <!-- Display Flash Messages -->
+    <% if (locals.success) { %>
+        <div style="color: green;">
+            <%= locals.success %>
+        </div>
+    <% } %>
+    <% if (locals.error) { %>
+        <div style="color: red;">
+            <%= locals.error %>
+        </div>
+    <% } %>
+    <form method="POST" action="/products/add">
+        <input type="text" name="_csrf" value="<%= csrfToken %>" hidden>
+        <input type="text" name="name" required placeholder="Product Name">
+        <input type="text" name="category" required placeholder="Category">
+        <input type="number" name="stockLevel" required placeholder="Stock Level">
+        <input type="number" name="reorderPoint" required placeholder="Reorder Point">
+        <input type="text" name="supplier" required placeholder="Supplier Name">
+        <input type="text" name="supplierContact" placeholder="Supplier Contact">
+        <button type="submit">Save Product</button>
+      </form>
+      
+    <!-- Add Product Form -->
+    <form action="/products/add" method="POST">
+        <input type="text" name="_csrf" value="<%= csrfToken %>" hidden>
+        <label for="ProductName">Product Name:</label>
+        <input type="text" id="ProductName" name="ProductName" required><br><br>
+
+        <label for="Description">Description:</label>
+        <textarea id="Description" name="Description"></textarea><br><br>
+
+        <label for="ProductImage">Product Image (URL):</label>
+        <input type="text" id="ProductImage" name="ProductImage"><br><br>
+
+        <label for="ProductCategoryName">Product Category:</label>
+        <input type="text" id="ProductCategoryName" name="ProductCategoryName" required><br><br>
+
+        <label for="ModelNumber">Model Number:</label>
+        <input type="text" id="ModelNumber" name="ModelNumber"><br><br>
+
+        <label for="SerialNumber">Serial Number:</label>
+        <input type="text" id="SerialNumber" name="SerialNumber"><br><br>
+
+        <label for="StockLevel">Stock Level:</label>
+        <input type="number" id="StockLevel" name="StockLevel" required><br><br>
+
+        <label for="ReorderPoint">Reorder Point:</label>
+        <input type="number" id="ReorderPoint" name="ReorderPoint" required><br><br>
+
+        <label for="SupplierName">Supplier Name:</label>
+        <input type="text" id="SupplierName" name="SupplierName"><br><br>
+
+        <label for="SupplierMail">Supplier Email:</label>
+        <input type="email" id="SupplierMail" name="SupplierMail"><br><br>
+
+        <label for="SupplierContact">Supplier Contact:</label>
+        <input type="text" id="SupplierContact" name="SupplierContact"><br><br>
+
+        <label for="OrderDate">Order Date:</label>
+        <input type="date" id="OrderDate" name="OrderDate"><br><br>
+
+        <label for="Quantity">Quantity:</label>
+        <input type="number" id="Quantity" name="Quantity"><br><br>
+
+        <label for="OrderStatus">Order Status:</label>
+        <input type="text" id="OrderStatus" name="OrderStatus"><br><br>
+
+        <button type="submit">Add Product</button>
+    </form>
+</body>
+</html>

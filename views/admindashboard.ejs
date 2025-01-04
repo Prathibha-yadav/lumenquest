@@ -9,13 +9,29 @@
   <%- include("header.ejs") %> 
   <main>
     <section>
-      <h1 >Welcome <%= getUser.firstname %>!</h1>
+      <h1>Welcome <%= getUser.firstname %>!</h1>
       <p>This is your dashboard. Manage users, services, or settings from here.</p>
     </section>
 
     <section>
       <h3>Available Products</h3>
-      
+      <p>
+        <a href="/products/add">Create a new product</a>
+      </p>
+
+      <% if (products.length > 0) { %>
+        <ul>
+          <% products.forEach(product => { %>
+            <li>
+              <h4><%= product.ProductName %></h4>
+              <p><%= product.Description %></p>
+              <p><%= product.ProductCategoryName %></p>
+            </li>
+          <% }) %>
+        </ul>
+      <% } else { %>
+        <p>No products available.</p>
+      <% } %>
     </section>
   </main>
   <%- include("footer.ejs") %> 

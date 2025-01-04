@@ -1,6 +1,6 @@
 const express = require('express');
 const path = require('path');
-const { User } = require('./models'); // Import the User model
+const { User, Inventory } = require('./models'); // Import the User model
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
@@ -162,20 +162,99 @@ app.post('/signup', async (request, response) => {
   }
 });
 
-app.get('/admin/dashboard', (request, response) => {
+app.get('/admin/dashboard', async (request, response) => {
   if (!request.isAuthenticated() || request.user.role !== 'admin') {
     return response.status(403).send('Access denied');
   }
-  console.log(request.user)
-  response.render('admindashboard', { getUser: request.user });
+
+  try {
+    // Retrieve all products from the database
+    const products = await Inventory.findAll();
+
+    response.render('admindashboard', { 
+      getUser: request.user,
+      products: products // Pass products to the view
+    });
+  } catch (error) {
+    console.error(error);
+    response.status(500).send('Internal server error');
+  }
 });
 
-app.get('/user/dashboard', (request, response) => {
+
+app.get('/user/dashboard', async (request, response) => {
   if (!request.isAuthenticated() || request.user.role !== 'customer') {
     return response.status(403).send('Access denied');
   }
-  response.render('userdashboard', { getUser: request.user });
+
+  try {
+    // Retrieve all products for the user dashboard
+    const products = await Inventory.findAll();
+
+    response.render('userdashboard', { 
+      getUser: request.user,
+      products: products // Pass products to the view
+    });
+  } catch (error) {
+    console.error(error);
+    response.status(500).send('Internal server error');
+  }
 });
+
+
+app.get('/products/add', (req, res) => {
+  res.render('addProduct'); 
+});
+
+
+app.post('/products/add', async (req, res) => {
+  const {
+    ProductName, Description, ProductImage, ProductCategoryName,
+    ModelNumber, SerialNumber, StockLevel, ReorderPoint,
+    SupplierName, SupplierMail, SupplierContact, OrderDate,
+    Quantity, OrderStatus
+  } = req.body;
+
+  const userId = req.user ? req.user.id : null;
+
+  if (!userId) {
+    return res.status(403).send("User not authenticated.");
+  }
+
+  try {
+    const productData = {
+      ProductName, Description, ProductImage, ProductCategoryName,
+      ModelNumber, SerialNumber, StockLevel, ReorderPoint,
+      SupplierName, SupplierMail, SupplierContact, OrderDate,
+      Quantity, OrderStatus,
+      userId
+    };
+
+    // Add the product with the userId
+    const newProduct = await Inventory.addProduct(productData);
+
+    // Log the product details to console
+    console.log("Product added: ", newProduct);
+
+    // Set a flash message
+    req.flash('success', 'Product added successfully!');
+
+    // Redirect to admin dashboard with product details
+    if (req.user.role === 'admin') {
+      return res.redirect('/admin/dashboard');
+    } else {
+      return res.redirect('/user/dashboard');
+    }
+
+  } catch (error) {
+    console.error(error);
+    req.flash('error', 'Failed to add product. Please try again.');
+    res.redirect('/products/add');
+  }
+});
+
+
+
 
 app.get('/logout', (request, response) => {
   request.logout((err) => {

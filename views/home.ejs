@@ -3,10 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Lumen Quest Hackathon</title>
- 
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-  <%- include("login.ejs") %> 
+<body class="bg-gray-100 text-gray-900 font-sans">
+
+  <!-- Main Container -->
+  <div class="min-h-screen flex flex-col justify-center items-center">
+
+    <!-- Header Section -->
+    <header class="mb-8 text-center">
+      <h1 class="text-4xl font-semibold text-indigo-600">Lumen Quest Hackathon</h1>
+      <p class="mt-2 text-lg text-gray-600">Welcome to the hackathon event</p>
+    </header>
+
+    <!-- Login Form (included) -->
+    <%- include("login.ejs") %>
+
+  </div>
+
+</body>
 </html>
