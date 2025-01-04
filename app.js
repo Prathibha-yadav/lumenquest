@@ -223,7 +223,22 @@ app.get('/user/dashboard', async (request, response) => {
   }
 });
 
+app.get('/staff/dashboard', async (request, response) => {
+  if (!request.isAuthenticated() || request.user.role !== 'customer') {
+    return response.status(403).send('Access denied');
+  }
 
+  try {
+    const products = await Inventory.findAll();
+    response.render('userdashboard', { 
+      getUser: request.user,
+      products: products,
+    });
+  } catch (error) {
+    console.error(error);
+    response.status(500).send('Internal server error');
+  }
+});
 
 // Add Product Route
 app.get('/products/add', (req, res) => {

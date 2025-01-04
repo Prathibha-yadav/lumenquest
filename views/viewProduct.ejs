@@ -63,6 +63,7 @@
       <div class="mb-4">
         <a href="/products/edit/<%= product.id %>" class="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:ring-2 focus:ring-blue-500">Edit Product</a>
         <form action="/products/delete/<%= product.id %>" method="POST" class="inline">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
           <button type="submit" class="bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 focus:ring-2 focus:ring-red-500">Delete Product</button>
         </form>
       </div>
